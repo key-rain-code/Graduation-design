@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router, hashHistory } from 'react-router';
 
-import App from './views/App';
+import { getRoutes } from './routers';
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/antd.css';
@@ -9,7 +10,7 @@ import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router routes={getRoutes()} history={hashHistory} />
   </React.StrictMode>,
   document.getElementById('root')
 );
