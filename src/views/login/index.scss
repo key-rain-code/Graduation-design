@@ -1,0 +1,15 @@
+.login-content {
+  display: flex;
+  justify-content: center;
+  padding-bottom: calc(100vh - 389px);
+
+  .form-div {
+    display: flex;
+    align-items: center;
+    height: 325px;
+
+    form {
+      width: 600px;
+    }
+  }
+}

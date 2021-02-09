@@ -1,23 +1,12 @@
-import { Layout, Button } from 'antd';
-import { hashHistory } from "react-router";
+import { Layout } from 'antd';
 
 import './App.scss'
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 function App(props) {
   return (
-    <Layout>
-      <Header className="home-header">
-          <div style={{ display: 'flex' }}>
-            <img src='Car Rental.png' alt='' style={{ width: 40 }}/>
-            <div className="title">
-              <p>车联网信息分发访问策略生成平台</p>
-              <p>Internet of vehicles information</p>
-            </div>
-          </div>
-          <Button ghost onClick={() => hashHistory.replace({pathname: '/login'})}>控制台登录</Button>
-      </Header>
+    <>
       <Content className="home-content">
         <img src='background.jpeg' alt='' />
         <div className="text">
@@ -32,7 +21,7 @@ function App(props) {
           <h2>适用场景</h2>
         </div>
       </Content>
-    </Layout>
+    </>
   );
 }
 
