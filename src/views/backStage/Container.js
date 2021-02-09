@@ -1,5 +1,10 @@
+import React, { useState } from 'react'
 import { Layout, Menu, Dropdown } from 'antd';
-import { AliwangwangFilled, DownOutlined } from '@ant-design/icons';
+import { 
+  AliwangwangFilled, DownOutlined, BarChartOutlined, 
+  CopyOutlined, FormOutlined, MediumOutlined, MenuUnfoldOutlined, 
+  MenuFoldOutlined 
+} from '@ant-design/icons';
 import { hashHistory } from "react-router";
 
 import './Container.scss'
@@ -7,6 +12,7 @@ import './Container.scss'
 const { Header, Content, Sider } = Layout;
 
 function Container(props) {
+  const [collapsed, setCollapsed] = useState(false)
   const { children } = props
 
   const menu = (
@@ -34,37 +40,41 @@ function Container(props) {
     }
   }
 
+  const toggle = () => {
+    setCollapsed(!collapsed)
+  };
+
   return (
     <Layout className="backStage-content">
-      <Header className="header">
-        <div>
-          <img src='Car Rental.png' alt='' style={{ width: 40, height: 40 }}/>
-          <h1>车联网信息分发访问策略生成后台</h1>
-        </div>
-        <div>
-          <AliwangwangFilled className="user-icon"/>
-          <Dropdown overlay={menu}>
-            <a href="/#" onClick={e => e.preventDefault()}>
-              kongshan <DownOutlined />
-            </a>
-        </Dropdown>
-        </div>
-      </Header>
-      
-      <Layout>
-        <Sider width={200} className="site-layout-background">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            style={{ height: '100%', borderRight: 0 }}
-          >
-            <Menu.Item key="1" onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
-            <Menu.Item key="2" onClick={() => handleMenuClick('infoBase')}>信息总库</Menu.Item>
-            <Menu.Item key="3" onClick={() => handleMenuClick('semantic')}>策略制定</Menu.Item>
-            <Menu.Item key="4" onClick={() => handleMenuClick('strategy')}>语义库</Menu.Item>
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
+            <img src='Car Rental.png' alt='' style={{ width: 40, height: 40 }}/>
+          </div>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu.Item key="1" icon={<BarChartOutlined />} onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
+            <Menu.Item key="2" icon={<CopyOutlined />} onClick={() => handleMenuClick('infoBase')}>信息总库</Menu.Item>
+            <Menu.Item key="3" icon={<FormOutlined />} onClick={() => handleMenuClick('semantic')}>策略制定</Menu.Item>
+            <Menu.Item key="4" icon={<MediumOutlined />} onClick={() => handleMenuClick('strategy')}>语义库</Menu.Item>
           </Menu>
         </Sider>
-        
+      
+      <Layout style={{ minHeight: '100vh' }}>
+          <Header className="header">
+            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+              className: 'trigger',
+              onClick: toggle
+            })}
+            <h1>车联网信息分发访问策略生成后台</h1>
+            <div>
+              <AliwangwangFilled className="user-icon"/>
+              <Dropdown overlay={menu}>
+                <a href="/#" onClick={e => e.preventDefault()}>
+                  kongshan <DownOutlined />
+                </a>
+            </Dropdown>
+            </div>
+          </Header>
+
         <Layout style={{ padding: '24px 24px' }}>
           <Content
             className="site-layout-background"
