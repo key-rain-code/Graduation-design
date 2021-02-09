@@ -10,9 +10,11 @@ function Main(props) {
 
   const hashPath = window.location.hash
   const isLoginRegister = ['#/login', '#/register'].indexOf(hashPath) > -1
+  const isFrontStage = ['#/', '#/login', '#/register'].indexOf(hashPath) > -1
 
   return (
     <Layout>
+      { isFrontStage ? 
       <Header className={hashPath === '#/' ? 'home-header header-lucency': 'home-header'}>
           <div style={{ display: 'flex' }}>
             <img src='Car Rental.png' alt='' style={{ width: 40 }}/>
@@ -22,7 +24,8 @@ function Main(props) {
             </div>
           </div>
           <Button ghost onClick={() => hashHistory.push(isLoginRegister ? '/' : '/login')}>{isLoginRegister? '首页' : '控制台登录'}</Button>
-      </Header>
+      </Header> 
+      : null }
       {children}
     </Layout>
   )

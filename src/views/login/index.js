@@ -25,7 +25,7 @@ function Login() {
   };
 
   const onFinishFailed = (errorInfo) => {
-    hashHistory.replace('/backStage')
+    hashHistory.push('/backStage')
     console.log('Failed:', errorInfo);
   };
 

@@ -33,6 +33,18 @@ const Statistic = createLazyRoute(
   lazy(() => import('./views/backStage/statistic'))
 )
 
+const InfoBase = createLazyRoute(
+  lazy(() => import('./views/backStage/infoBase'))
+)
+
+const Semantic = createLazyRoute(
+  lazy(() => import('./views/backStage/semantic'))
+)
+
+const Strategy = createLazyRoute(
+  lazy(() => import('./views/backStage/strategy'))
+)
+
 const RouteConfig =
 [
   {
@@ -57,8 +69,23 @@ const RouteConfig =
         childRoutes: [
           {
             path: '/statistic',
-            name: '数据概览页',
+            name: '数据概览',
             component: Statistic
+          },
+          {
+            path: '/infoBase',
+            name: '信息总库',
+            component: InfoBase
+          },
+          {
+            path: '/semantic',
+            name: '策略制定',
+            component: Semantic
+          },
+          {
+            path: '/strategy',
+            name: '语义库',
+            component: Strategy
           }
         ]
       }
