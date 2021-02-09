@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 
+import Main from './views/Main'
 import NotFund from './components//notFund'
 import LoadingComponent from './components/loading'
 
@@ -12,22 +13,34 @@ const createLazyRoute = (RouteComponent) => {
         )
     }
 }
+
 const Home = createLazyRoute(
     lazy(() => import('./views/App'))
 )
 
-export function getRoutes () {
-    return (
-        [
-            {
-              path: '/',
-              name: '首页',
-              component: Home
-            },
-            {
-                path: '/*',
-                component: NotFund
-            }
-        ]
-    )
-}
+const Login = createLazyRoute(
+  lazy(() => import('./views/login'))
+)
+
+const RouteConfig =
+[
+  {
+    path: '/',
+    name: '首页',
+    component: Main,
+    indexRoute: { component: Home },
+    childRoutes: [
+      {
+        path: '/login',
+        name: '登录',
+        component: Login
+      }
+    ]
+  },
+  {
+      path: '/*',
+      component: NotFund
+  }
+]
+    
+export default RouteConfig

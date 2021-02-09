@@ -2,16 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, hashHistory } from 'react-router';
 
-import { getRoutes } from './routers';
 import reportWebVitals from './reportWebVitals';
+import RouteConfig from './routers'
 
 import 'antd/dist/antd.css';
 import './index.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router routes={getRoutes()} history={hashHistory} />
-  </React.StrictMode>,
+  <Router routes={RouteConfig} history={hashHistory} />,
   document.getElementById('root')
 );
 

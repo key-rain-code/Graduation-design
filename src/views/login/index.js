@@ -1,3 +1,9 @@
-import { PureComponent } from 'react'
+import './index.scss'
 
-import './App.scss'
+function Login() {
+  return (
+    <div>123</div>
+  )
+}
+
+export default Login

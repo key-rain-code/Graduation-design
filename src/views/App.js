@@ -1,9 +1,11 @@
 import { Layout, Button } from 'antd';
+import { hashHistory } from "react-router";
 
 import './App.scss'
+
 const { Header, Content } = Layout;
 
-function App() {
+function App(props) {
   return (
     <Layout>
       <Header className="home-header">
@@ -14,7 +16,7 @@ function App() {
               <p>Internet of vehicles information</p>
             </div>
           </div>
-          <Button ghost>控制台登录</Button>
+          <Button ghost onClick={() => hashHistory.replace({pathname: '/login'})}>控制台登录</Button>
       </Header>
       <Content className="home-content">
         <img src='background.jpeg' alt='' />
