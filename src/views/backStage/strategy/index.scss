@@ -1,0 +1,23 @@
+.backStage-strategy-main {
+  height: 100%;
+  overflow-y: auto;
+
+  .strategy-header {
+    display: flex;
+    margin-bottom: 35px;
+
+    .dt-search {
+      width: 350px;
+      margin-right: 25px;
+    }
+
+    .add-input {
+      width: 250px;
+      margin-right: 25px;
+    }
+  }
+
+  .ant-tag {
+    margin-bottom: 15px;
+  }
+}
