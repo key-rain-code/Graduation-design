@@ -47,8 +47,11 @@ function Container(props) {
   return (
     <Layout className="backStage-content">
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
-            <img src='Car Rental.png' alt='' style={{ width: 40, height: 40 }}/>
+          <div style={{ height: 32, margin: 6, display: 'flex', justifyContent: 'center' }} className="header">
+            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+              className: 'trigger',
+              onClick: toggle
+            })}
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<BarChartOutlined />} onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
@@ -60,10 +63,7 @@ function Container(props) {
       
       <Layout style={{ minHeight: '100vh' }}>
           <Header className="header">
-            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-              className: 'trigger',
-              onClick: toggle
-            })}
+            <span></span>
             <h1>车联网信息分发访问策略生成后台</h1>
             <div>
               <AliwangwangFilled className="user-icon"/>

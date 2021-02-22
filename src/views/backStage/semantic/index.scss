@@ -1,0 +1,24 @@
+.backStage-semantic-main {
+  height: 100%;
+  overflow-y: auto;
+
+  .semantic-header {
+    display: flex;
+    margin-bottom: 35px;
+    justify-content: space-between;
+
+    div {
+      .dt-search {
+        width: 350px;
+        margin-right: 25px;
+      }
+    }
+  }
+
+  .auto-table {
+    .ant-table-content {
+      height: 410px !important;
+      overflow-y: auto;
+    }
+  }
+}
