@@ -1,84 +1,34 @@
-import { Table, Tag, Space } from 'antd';
+import { Input, Tabs, DatePicker } from 'antd';
+
+import SendedTable from './components/sendedTable'
+import SendingTable from './components/sendingTable'
 
 import './index.scss'
 
+const { TabPane } = Tabs
+const { Search } = Input
+const { RangePicker } = DatePicker;
+
 function InfoBase(props) {
 
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-
   return (
-    <div>
-      <Table columns={columns} dataSource={data} />
+    <div className="backStage-infoBase-main">
+      <Tabs defaultActiveKey="1" >
+        <TabPane tab="未发信息" key="1">
+          <SendingTable />
+        </TabPane>
+        <TabPane tab="已发信息" key="2">
+          <div className="infoBase-header">
+          <Search
+            className="dt-search"
+            placeholder="请输入查询内容"
+            allowClear
+          />
+            <RangePicker showTime />
+          </div>
+          <SendedTable />
+        </TabPane>
+      </Tabs>
     </div>
   )
 }

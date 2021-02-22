@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, hashHistory } from 'react-router';
+import zhCN from 'antd/es/locale/zh_CN';
+import { ConfigProvider } from 'antd';
 
 import reportWebVitals from './reportWebVitals';
 import RouteConfig from './routers'
@@ -9,7 +11,9 @@ import 'antd/dist/antd.css';
 import './index.css';
 
 ReactDOM.render(
-  <Router routes={RouteConfig} history={hashHistory} />,
+  <ConfigProvider locale={zhCN}>
+    <Router routes={RouteConfig} history={hashHistory} />
+  </ConfigProvider>,
   document.getElementById('root')
 );
 
