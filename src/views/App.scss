@@ -44,11 +44,59 @@
   .module-scenerio {
     text-align: center;
     background-color: #FFFFFF;
-    height: 600px;
+    height: 650px;
     padding-top: 45px;
 
     h2 {
       font-size: 26px;
+      padding-bottom: 19px;
+    }
+
+    .scenerio-content {
+      display: flex;
+      padding: 0 80px;
+      flex-wrap: wrap;
+      justify-content: space-around;
+
+      .ant-card {
+        width: 48%;
+        background-color: #FAFAFA;
+        margin: 10px;
+        height: 190px;
+
+        p {
+          color: #575D6C;
+          margin-top: 50px;
+        }
+
+        h3::after {
+          position: absolute;
+          content: "";
+          background-color: #8a8e99;
+          width: 32px;
+          height: 3px;
+          left: 50%;
+          bottom: 120px;
+          margin-left: -16px;
+        }
+      }
+
+      .ant-card:hover {
+        h3::after {
+          background-color: #c50c15;
+        }
+      }
+    }
+
+    .home-ellipsis-component {
+      margin-top: 25px;
+
+      div {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: #a8acc3;
+      }
     }
   }
 }
