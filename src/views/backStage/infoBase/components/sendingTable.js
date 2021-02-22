@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { Table, Modal, Form, Input, Space } from 'antd';
+import { Table, Modal, Form, Input, Space, Radio, Select, Button } from 'antd'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
-const { TextArea } = Input
+
+const { Group } = Radio
+const { Option } = Select
 
 const layout = {
   labelCol: { span: 6 },
@@ -10,6 +13,9 @@ const layout = {
 
 function SendingTable(props) {
   const [visible, setVisible] = useState(false)
+  const [setType, setSetType] = useState(0)
+  
+  const [form] = Form.useForm();
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -113,34 +119,74 @@ function SendingTable(props) {
           title="策略设置"
           centered
           visible={visible}
-          onOk={() => setVisible(false)}
+          onOk={() => setVisible(true)}
           onCancel={() => setVisible(false)}
-          footer={false}
         >
           <Form
             {...layout}
+            form={form}
             name="basic"
           >
           <Form.Item
             label="设置方式"
-            name="username"
+            name="setType"
+            initialValue={0}
           >
-            <TextArea disabled rows={4}/>
+            <Group onChange={({target: { value }}) => setSetType(value)}>
+              <Radio value={0}>手动</Radio>
+              <Radio value={1}>自动</Radio>
+            </Group>
           </Form.Item>
 
-          <Form.Item
-            label="密文"
-            name="password"
-          >
-            <TextArea disabled rows={4}/>
-          </Form.Item>
-
-          <Form.Item
-            label="策略"
-            name="password"
-          >
-            <TextArea disabled rows={4}/>
-          </Form.Item>
+          { setType ?
+            (<Form.Item
+              label="策略类型"
+              name="password"        
+              >
+                <Select defaultValue="lucy">
+                  <Option value="jack">场景策略1</Option>
+                  <Option value="lucy">场景策略2</Option>
+                </Select>
+            </Form.Item>):(
+              <Form.Item
+              label="策略内容"
+              name="password"        
+              >
+                <Form.List name="users">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map(field => (
+                        <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                          <Form.Item
+                            {...field}
+                            name={[field.name, 'first']}
+                            fieldKey={[field.fieldKey, 'first']}
+                            rules={[{ required: true, message: 'Missing first name' }]}
+                          >
+                            <Input placeholder="First Name" />
+                          </Form.Item>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, 'last']}
+                            fieldKey={[field.fieldKey, 'last']}
+                            rules={[{ required: true, message: 'Missing last name' }]}
+                          >
+                            <Input placeholder="Last Name" />
+                          </Form.Item>
+                          <MinusCircleOutlined onClick={() => remove(field.name)} />
+                        </Space>
+                      ))}
+                      <Form.Item>
+                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                          Add field
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+            </Form.Item>
+            )
+          }
 
           </Form>
         </Modal>

@@ -33,7 +33,7 @@ function BarEcharts(props) {
   }, [echartsDom, title])
 
   return (
-    <div ref={echartsDom} style={{width: '100%', height: 220}}></div>
+    <div ref={echartsDom} style={{width: 369, height: 220}}></div>
   )
 }
 

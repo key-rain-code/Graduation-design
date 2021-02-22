@@ -1,4 +1,4 @@
-import { Table, Tag, Space, Tabs } from 'antd';
+import { Tabs } from 'antd';
 
 import './index.scss'
 

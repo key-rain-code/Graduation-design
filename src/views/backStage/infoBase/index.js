@@ -15,6 +15,13 @@ function InfoBase(props) {
     <div className="backStage-infoBase-main">
       <Tabs defaultActiveKey="1" >
         <TabPane tab="未发信息" key="1">
+        <div className="infoBase-header">
+          <Search
+            className="dt-search"
+            placeholder="请输入查询内容"
+            allowClear
+          />
+          </div>
           <SendingTable />
         </TabPane>
         <TabPane tab="已发信息" key="2">

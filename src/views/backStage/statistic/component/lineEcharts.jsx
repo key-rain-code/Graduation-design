@@ -110,7 +110,7 @@ function LineEcharts(props) {
   }, [echartsDom])
 
   return (
-    <div ref={echartsDom} style={{width: '100%', height: 'calc(100% - 220px)', marginTop: 50}}></div>
+    <div ref={echartsDom} style={{width: 1144, height: 'calc(100% - 220px)', marginTop: 50}}></div>
   )
 }
 
