@@ -39,6 +39,54 @@
       color: #666666;
       margin: 0;
     }
+
+    .business-content {
+      display: flex;
+      padding: 0 100px;
+
+      img {
+        width: 750px;
+      }
+
+      div {
+        width: 700px;
+        height: 450px;
+        margin-top: 19px;
+        background-color: #FFFFFF;
+        text-align: left;
+        padding: 20px;
+
+        .business-description-title {
+          margin-bottom: 8px;
+          font-weight: bold;
+          font-size: 16px;
+          color: #252B3A;
+          line-height: 18px;
+          margin-top: 5px;
+        }
+
+        .business-sub-title {
+          margin-top: 8px;
+          font-weight: bold;
+          padding-left: 14px;
+          font-size: 14px;
+          color: #252B3A;
+          line-height: 18px;
+        }
+
+        .business-sub-text {
+          color: #575D6C;
+          font-size: 14px;
+          padding-left: 14px;
+        }
+
+        .business-p-detail {
+          color: #575D6C;
+          font-size: 14px;
+        }
+
+      }
+    }
   }
 
   .module-scenerio {
