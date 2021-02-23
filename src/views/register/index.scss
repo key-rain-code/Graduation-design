@@ -1,4 +1,4 @@
-.login-content {
+.register-content {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,14 +9,21 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: 540px;
-    height: 540px;
+    width: 775px;
+    padding: 50px 0;
     background-color: #FFFFFF;
+
+    .login-text {
+      display: flex;
+      font-size: 12px;
+      position: relative;
+      top: -35px;
+      right: -320px;
+    }
 
     h1 {
       position: relative;
-      top: -80px;
-      left: -170px;
+      top: -20px;
       font-size: 28px;
       font-weight: bold;
     }
@@ -26,7 +33,15 @@
 
       button,
       .ant-form-item-control-input {
-        width: 340px;
+        width: 370px;
+      }
+
+      .checkbox-text {
+        label {
+          font-size: 10px !important;
+          position: relative;
+          top: -25px;
+        }
       }
     }
   }

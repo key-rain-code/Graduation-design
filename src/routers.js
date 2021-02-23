@@ -21,6 +21,10 @@ const Login = createLazyRoute(
   lazy(() => import('./views/login'))
 )
 
+const Register = createLazyRoute(
+  lazy(() => import('./views/register'))
+)
+
 const Main = createLazyRoute(
   lazy(() => import('./views/Main'))
 )
@@ -57,6 +61,11 @@ const RouteConfig =
         path: '/login',
         name: '登录页',
         component: Login
+      },
+      {
+        path: '/register',
+        name: '注册页',
+        component: Register
       },
       {
         path: '/backStage',
