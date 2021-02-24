@@ -79,9 +79,10 @@ function Container(props) {
           <Content
             className="site-layout-background"
             style={{
-              padding: 24,
+              padding: 10,
               margin: 0,
               minHeight: 280,
+              backgroundColor: 'rgba(0, 0, 0, 0)'
             }}
           >
             {children}

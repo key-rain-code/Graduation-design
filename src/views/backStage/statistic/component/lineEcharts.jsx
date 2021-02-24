@@ -11,7 +11,7 @@ function LineEcharts(props) {
     
     const option = {
       title: {
-          text: '堆叠区域图'
+          text: '变化趋势图'
       },
       tooltip: {
           trigger: 'axis',
@@ -23,7 +23,7 @@ function LineEcharts(props) {
           }
       },
       legend: {
-          data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+          data: ['接入信息', '场景策略', '自定义策略']
       },
       toolbox: {
           feature: {
@@ -40,7 +40,7 @@ function LineEcharts(props) {
           {
               type: 'category',
               boundaryGap: false,
-              data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+              data: ['02-19', '02-20', '02-21', '02-22', '02-23', '02-24', '02-25']
           }
       ],
       yAxis: [
@@ -50,7 +50,7 @@ function LineEcharts(props) {
       ],
       series: [
           {
-              name: '邮件营销',
+              name: '接入信息',
               type: 'line',
               stack: '总量',
               areaStyle: {},
@@ -60,7 +60,7 @@ function LineEcharts(props) {
               data: [120, 132, 101, 134, 90, 230, 210]
           },
           {
-              name: '联盟广告',
+              name: '场景策略',
               type: 'line',
               stack: '总量',
               areaStyle: {},
@@ -70,7 +70,7 @@ function LineEcharts(props) {
               data: [220, 182, 191, 234, 290, 330, 310]
           },
           {
-              name: '视频广告',
+              name: '自定义策略',
               type: 'line',
               stack: '总量',
               areaStyle: {},
@@ -78,30 +78,6 @@ function LineEcharts(props) {
                   focus: 'series'
               },
               data: [150, 232, 201, 154, 190, 330, 410]
-          },
-          {
-              name: '直接访问',
-              type: 'line',
-              stack: '总量',
-              areaStyle: {},
-              emphasis: {
-                  focus: 'series'
-              },
-              data: [320, 332, 301, 334, 390, 330, 320]
-          },
-          {
-              name: '搜索引擎',
-              type: 'line',
-              stack: '总量',
-              label: {
-                  show: true,
-                  position: 'top'
-              },
-              areaStyle: {},
-              emphasis: {
-                  focus: 'series'
-              },
-              data: [820, 932, 901, 934, 1290, 1330, 1320]
           }
       ]
   };
@@ -110,7 +86,11 @@ function LineEcharts(props) {
   }, [echartsDom])
 
   return (
-    <div ref={echartsDom} style={{width: 1144, height: 'calc(100% - 220px)', marginTop: 50}}></div>
+    <div 
+        ref={echartsDom} 
+        style={{width: '100%', height: 'calc(100% - 180px)', padding: 30, marginTop: 20, boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', borderRadius: 2, background: '#FFFFFF'}}
+    >
+    </div>
   )
 }
 
