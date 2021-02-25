@@ -66,11 +66,18 @@ function Semantic(props) {
             className="dt-search"
             placeholder="请输入查询内容"
             allowClear
+            enterButton
+            bordered={false}
+            style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
           />
-            <Select defaultValue="lucy" style={{ width: 220, marginLeft: 25 }}>
-              <Option value="lucy">场景策略</Option>
-              <Option value="lucy">自定义策略</Option>
-            </Select>
+          <Select 
+            defaultValue="lucy" 
+            bordered={false}
+            style={{ width: 220, marginLeft: 25, boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
+            >
+            <Option value="lucy">场景策略</Option>
+            <Option value="lucy">自定义策略</Option>
+          </Select>
         </div>
         <Button type="primary" onClick={() => setVisible(true)}>添加策略</Button>
       </div>
@@ -78,6 +85,7 @@ function Semantic(props) {
         columns={columns} 
         dataSource={data} 
         className="auto-table"
+        style={{ boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
         />
         <Modal
           title="策略设置"
