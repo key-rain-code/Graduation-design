@@ -1,19 +1,21 @@
 import { useState } from 'react'
 import { Input, Button, Table, Select, Modal, Form, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { MinusCircleOutlined, PlusOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 import './index.scss'
 
-const { Search } = Input
+const { Search, TextArea } = Input
 const { Option } = Select
 
 const layout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 14 },
+  wrapperCol: { span: 16 },
 };
 
 function Semantic(props) {
   const [visible, setVisible] = useState(false)
+  const [modalTitle, setModalTitle] = useState(0)
+  const [strategy, serStrategy] = useState([])
   const [form] = Form.useForm();
 
   const columns = [
@@ -42,7 +44,26 @@ function Semantic(props) {
       dataIndex: 'action',
       key: 'action',
       render: (text, record) => (
-        <a href="/#">删除</a>
+        <Space>
+          <a 
+          href="#/"
+          onClick={(e) =>{
+            e.preventDefault()
+            setVisible(true)
+            setModalTitle(1)
+           }}
+          >
+            编辑
+          </a>
+          <a 
+          href="#/"
+          onClick={(e) =>{
+            e.preventDefault()
+           }}
+          >
+            删除
+          </a>
+        </Space>
       )
     }
   ];
@@ -58,6 +79,11 @@ function Semantic(props) {
     }
   ];
 
+  const add = () => {
+    let newStrategy = [...strategy]
+    serStrategy(newStrategy.push({ key:'', name:'', value: '' }))
+  }
+
   return (
     <div className="backStage-semantic-main">
       <div className="semantic-header">
@@ -70,16 +96,28 @@ function Semantic(props) {
             bordered={false}
             style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
           />
-          <Select 
-            defaultValue="lucy" 
-            bordered={false}
-            style={{ width: 220, marginLeft: 25, boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
-            >
-            <Option value="lucy">场景策略</Option>
-            <Option value="lucy">自定义策略</Option>
-          </Select>
+          <label>
+            <span>
+              策略类型：
+            </span>
+            <Select 
+              bordered={false}
+              style={{ width: 220, boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
+              >
+              <Option value="scene_strategy">场景策略</Option>
+              <Option value="custom_strategy">自定义策略</Option>
+            </Select>
+          </label>
         </div>
-        <Button type="primary" onClick={() => setVisible(true)}>添加策略</Button>
+        <Button
+         type="primary" 
+         onClick={() =>{
+           setVisible(true)
+           setModalTitle(0)
+          }}
+         >
+           新增策略
+        </Button>
       </div>
       <Table 
         columns={columns} 
@@ -87,57 +125,102 @@ function Semantic(props) {
         className="auto-table"
         style={{ boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
         />
-        <Modal
-          title="策略设置"
-          centered
-          visible={visible}
-          onOk={() => setVisible(true)}
-          onCancel={() => setVisible(false)}
-        >
-          <Form
-            {...layout}
-            form={form}
-            name="basic"
+        {visible &&
+          <Modal
+            title={modalTitle ? '编辑策略':'新增策略'}
+            centered
+            visible={visible}
+            onOk={() => console.log(form.getFieldsValue(),'123')}
+            onCancel={() => setVisible(false)}
           >
-          <Form.Item
-              label="策略内容"
-              name="password"        
-              >
-                <Form.List name="users">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(field => (
-                        <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                          <Form.Item
-                            {...field}
-                            name={[field.name, 'first']}
-                            fieldKey={[field.fieldKey, 'first']}
-                            rules={[{ required: true, message: 'Missing first name' }]}
-                          >
-                            <Input placeholder="First Name" />
-                          </Form.Item>
-                          <Form.Item
-                            {...field}
-                            name={[field.name, 'last']}
-                            fieldKey={[field.fieldKey, 'last']}
-                            rules={[{ required: true, message: 'Missing last name' }]}
-                          >
-                            <Input placeholder="Last Name" />
-                          </Form.Item>
-                          <MinusCircleOutlined onClick={() => remove(field.name)} />
-                        </Space>
-                      ))}
-                      <Form.Item>
-                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                          Add field
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
+            <Form
+              {...layout}
+              form={form}
+              name="basic"
+            >
+            <Form.Item
+              label="策略名称"
+              name="name"
+              rules={[{ required: true, message: '请输入策略名称！' }]}
+            >
+              <Input />
             </Form.Item>
-          </Form>
-        </Modal>
+            <Form.Item
+              label="描述"
+              name="description"
+            >
+              <TextArea rows={3} />
+            </Form.Item>
+            <Form.Item
+              label="策略类型"
+              name="type"
+              rules={[{ required: true, message: '请选择策略类型！' }]}
+            >
+              <Select>
+                <Option value="scene_strategy">场景策略</Option>
+                <Option value="custom_strategy">自定义策略</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+                label="策略标签"
+                name="label"        
+                >
+                  <Form.List name="strategy">
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map((field,index) => (
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'first']}
+                              fieldKey={[field.fieldKey, 'first']}
+                              rules={[{ required: true, message: 'Missing first name' }]}
+                            >
+                              <Input placeholder="id" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'last']}
+                              fieldKey={[field.fieldKey, 'last']}
+                              rules={[{ required: true, message: 'Missing last name' }]}
+                            >
+                              <Input placeholder="key" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'last']}
+                              fieldKey={[field.fieldKey, 'last']}
+                              rules={[{ required: true, message: 'Missing last name' }]}
+                            >
+                              <Input placeholder="value" />
+                            </Form.Item>
+                            <MinusCircleOutlined onClick={() => remove(field.name)}/>
+                            <PlusCircleOutlined />
+                          </Space>
+                        ))}
+                        <Form.Item>
+                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                            Add
+                          </Button>
+                        </Form.Item>
+                      </>
+                    )}
+                  </Form.List>
+              </Form.Item>
+              <Form.Item
+                label="策略结果"
+                name="result"
+                rules={[{ required: true, message: '请输入策略结果！' }]}
+              >
+                <TextArea 
+                  rows={4}
+                  allowClear
+                  placeholder="例:((策略1+策略2)+策略3)"
+                  />
+              </Form.Item>
+            </Form>
+          </Modal>
+        }
     </div>
   )
 }

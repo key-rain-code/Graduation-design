@@ -57,6 +57,7 @@ function Strategy(props) {
       </div>
       <div>
         <h2>示例</h2>
+        <div>文本例子，分词结构，根据标签提取结果，方式待考虑</div>
       </div>
       <Modal title="添加" visible={isModalVisible} onOk={() => setIsModalVisible(false)} onCancel={() => setIsModalVisible(false)}>
         <Form
