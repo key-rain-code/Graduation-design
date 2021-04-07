@@ -16,10 +16,13 @@ function InfoBase(props) {
       <Tabs defaultActiveKey="1" >
         <TabPane tab="未发信息" key="1">
         <div className="infoBase-header">
-          <Search
+        <Search
             className="dt-search"
             placeholder="请输入查询内容"
             allowClear
+            enterButton
+            bordered={false}
+            style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
           />
           </div>
           <SendingTable />
@@ -30,8 +33,15 @@ function InfoBase(props) {
             className="dt-search"
             placeholder="请输入查询内容"
             allowClear
+            enterButton
+            bordered={false}
+            style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
           />
-            <RangePicker showTime />
+          <RangePicker 
+            showTime 
+            bordered={false}
+            className='dt-rangepicker'
+            />
           </div>
           <SendedTable />
         </TabPane>

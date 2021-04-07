@@ -3,7 +3,7 @@ import { Layout, Menu, Dropdown } from 'antd';
 import { 
   AliwangwangFilled, DownOutlined, BarChartOutlined, 
   CopyOutlined, FormOutlined, MediumOutlined, MenuUnfoldOutlined, 
-  MenuFoldOutlined 
+  MenuFoldOutlined, SafetyOutlined
 } from '@ant-design/icons';
 import { hashHistory } from "react-router";
 
@@ -21,23 +21,8 @@ function Container(props) {
     </Menu>
   );
 
-  const handleMenuClick = (key) => {
-    switch(key) {
-      case 'statistic':
-        hashHistory.push('/statistic');
-        break;
-      case 'infoBase':
-        hashHistory.push('/infoBase');
-        break;
-      case 'semantic':
-        hashHistory.push('/semantic');
-        break;
-      case 'strategy':
-        hashHistory.push('/strategy');
-        break;
-      default:
-        hashHistory.push('/');
-    }
+  const handleMenuClick = (address) => {
+    hashHistory.push(`/${address}`)
   }
 
   const toggle = () => {
@@ -56,8 +41,9 @@ function Container(props) {
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<BarChartOutlined />} onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
             <Menu.Item key="2" icon={<CopyOutlined />} onClick={() => handleMenuClick('infoBase')}>信息总库</Menu.Item>
-            <Menu.Item key="3" icon={<FormOutlined />} onClick={() => handleMenuClick('semantic')}>策略制定</Menu.Item>
-            <Menu.Item key="4" icon={<MediumOutlined />} onClick={() => handleMenuClick('strategy')}>语义库</Menu.Item>
+            <Menu.Item key="3" icon={<FormOutlined />} onClick={() => handleMenuClick('semantic')}>策略元模型</Menu.Item>
+            <Menu.Item key="4" icon={<MediumOutlined />} onClick={() => handleMenuClick('strategy')}>属性集合</Menu.Item>
+            <Menu.Item key="5" icon={<SafetyOutlined />} onClick={() => handleMenuClick('verification')}>场景模拟</Menu.Item>
           </Menu>
         </Sider>
       

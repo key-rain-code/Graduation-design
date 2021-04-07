@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Table, Modal, Form, Input } from 'antd';
+import { Table, Modal, Form, Input, Space } from 'antd';
 
 const { TextArea } = Input
 
@@ -86,7 +86,10 @@ function SendedTable(props) {
       dataIndex: 'action',
       key: 'action',
       render: (text, record) => (
-        <a href="/#" onClick={e => handleClick(e)} >详情</a>
+        <Space>
+          <a href="/#" onClick={e => handleClick(e)} >删除</a>
+          <a href="/#" onClick={e => handleClick(e)} >详情</a>
+        </Space>
       )
     }
   ];
@@ -108,6 +111,7 @@ function SendedTable(props) {
         columns={columns} 
         dataSource={data} 
         className="auto-table"
+        style={{ boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
         />
         <Modal
           title="信息详情"

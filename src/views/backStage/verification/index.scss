@@ -1,0 +1,29 @@
+.backStage-verification-main {
+  height: 100%;
+  overflow-y: auto;
+
+  .main-content {
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - 180px);
+    padding: 10px 0 10px 0;
+
+    .width-50 {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .width-100 {
+      width: 100%;
+      text-align: center;
+    }
+
+    .img-150 {
+      width: 150px;
+      cursor: pointer;
+    }
+  }
+}

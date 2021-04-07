@@ -4,11 +4,17 @@
 
   .infoBase-header {
     display: flex;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
 
     .dt-search {
       width: 350px;
       margin-right: 25px;
+    }
+
+    .dt-rangepicker {
+      background-color: #FFFFFF !important;
+      box-shadow: rgba(6, 14, 26, 0.08) !important;
+      border-radius: 2px;
     }
   }
 

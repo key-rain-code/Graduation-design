@@ -56,8 +56,20 @@ function Strategy(props) {
         ))}
       </div>
       <div>
-        <h2>示例</h2>
-        <div>文本例子，分词结构，根据标签提取结果，方式待考虑</div>
+        <h2>信息属性提取示例</h2>
+        <div style={{display: 'flex'}}>
+          <div style={{width: '50%'}}>
+            <h4>
+              信息1：驶向萍水街道路的车辆请把车速降低至60km/h
+            </h4>
+            <h4>
+              信息2：驶向萍水街道路的车辆请把车辆的速度速降低至60km/h
+            </h4>
+          </div>
+          <h4 style={{width: '50%', textAlign: 'center', alignItems: 'center', lineHeight: '58px'}}>
+            属性标准：车速
+          </h4>
+        </div>
       </div>
       <Modal title="添加" visible={isModalVisible} onOk={() => setIsModalVisible(false)} onCancel={() => setIsModalVisible(false)}>
         <Form
@@ -66,7 +78,7 @@ function Strategy(props) {
         form={form}
       >
           <Form.Item
-            label="标签"
+            label="属性"
             name="semanticsName"
             rules={[{ required: true, message: '请输入内容!' }]}
           >

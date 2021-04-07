@@ -49,6 +49,10 @@ const Strategy = createLazyRoute(
   lazy(() => import('./views/backStage/strategy'))
 )
 
+const Verification = createLazyRoute(
+  lazy(() => import('./views/backStage/verification'))
+)
+
 const RouteConfig =
 [
   {
@@ -88,13 +92,18 @@ const RouteConfig =
           },
           {
             path: '/semantic',
-            name: '策略制定',
+            name: '策略元模型',
             component: Semantic
           },
           {
             path: '/strategy',
-            name: '语义库',
+            name: '属性集合',
             component: Strategy
+          },
+          {
+            path: '/verification',
+            name: '场景模拟',
+            component: Verification
           }
         ]
       }

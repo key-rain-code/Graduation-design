@@ -9,14 +9,25 @@ const { Option } = Select
 
 const layout = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
+  wrapperCol: { span: 16 }
 };
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 6,
+    span: 16
+  }
+}
 
 function Semantic(props) {
   const [visible, setVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(0)
-  const [strategy, serStrategy] = useState([])
-  const [form] = Form.useForm();
+  const [strategy, setStrategy] = useState([])
+  const [form] = Form.useForm()
+
+  const handleDelete = (record) => {
+    const { id } = record
+  }
 
   const columns = [
     {
@@ -59,6 +70,7 @@ function Semantic(props) {
           href="#/"
           onClick={(e) =>{
             e.preventDefault()
+            handleDelete(record)
            }}
           >
             删除
@@ -79,9 +91,48 @@ function Semantic(props) {
     }
   ];
 
-  const add = () => {
+  const iconOperation = (operation, index) => {
     let newStrategy = [...strategy]
-    serStrategy(newStrategy.push({ key:'', name:'', value: '' }))
+    if(operation === 'add') {
+      newStrategy.push({ name:'', value: '' })
+    } else {
+      newStrategy.splice(index, 1)
+    }
+    setStrategy(newStrategy)
+  }
+
+  const handleChangeStrategy = (value, index, column) => {
+    let newStrategy = [...strategy]
+    newStrategy[index][column] = value
+    setStrategy(newStrategy)
+  }
+
+  const handleCancel = () => {
+    setVisible(false)
+    setStrategy([])
+  }
+
+  const handleAddBrackets = () => {
+    const { setFieldsValue, getFieldValue } = form
+    const newResult = '(' + getFieldValue('result') + ')'
+    setFieldsValue({'result' : newResult})
+  }
+
+  const handleAddStrategy = (index) => {
+    const { getFieldValue, setFieldsValue } = form
+    const strategy = '策略'+ (index+1)
+    const nowResult = getFieldValue('result')
+    if(!nowResult) {
+      setFieldsValue({'result' : strategy})
+    } else {
+      setFieldsValue({'result' : nowResult + strategy })
+    }
+  }
+
+  const handleAddLogic = (operat) => {
+    const { getFieldValue, setFieldsValue } = form
+    const nowResult = getFieldValue('result')
+    setFieldsValue({'result' : `${nowResult} ${operat} ` })
   }
 
   return (
@@ -130,8 +181,15 @@ function Semantic(props) {
             title={modalTitle ? '编辑策略':'新增策略'}
             centered
             visible={visible}
-            onOk={() => console.log(form.getFieldsValue(),'123')}
-            onCancel={() => setVisible(false)}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                取消
+              </Button>,
+              <Button key="submit" type="primary" onClick={() => console.log(form.getFieldsValue(),'123')}>
+                确定
+              </Button>,
+            ]}
           >
             <Form
               {...layout}
@@ -162,51 +220,26 @@ function Semantic(props) {
               </Select>
             </Form.Item>
             <Form.Item
-                label="策略标签"
-                name="label"        
+              label="策略标签"
+              name="label"        
+              >
+                <Button type="dashed" onClick={() => iconOperation('add')} block icon={<PlusOutlined />}>
+                  Add
+                </Button>
+            </Form.Item>
+            {strategy?.map((item,index) => (
+              <Form.Item
+                label={'策略'+(index+1)}
+                name={index+1}
                 >
-                  <Form.List name="strategy">
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map((field,index) => (
-                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                            <Form.Item
-                              {...field}
-                              name={[field.name, 'first']}
-                              fieldKey={[field.fieldKey, 'first']}
-                              rules={[{ required: true, message: 'Missing first name' }]}
-                            >
-                              <Input placeholder="id" />
-                            </Form.Item>
-                            <Form.Item
-                              {...field}
-                              name={[field.name, 'last']}
-                              fieldKey={[field.fieldKey, 'last']}
-                              rules={[{ required: true, message: 'Missing last name' }]}
-                            >
-                              <Input placeholder="key" />
-                            </Form.Item>
-                            <Form.Item
-                              {...field}
-                              name={[field.name, 'last']}
-                              fieldKey={[field.fieldKey, 'last']}
-                              rules={[{ required: true, message: 'Missing last name' }]}
-                            >
-                              <Input placeholder="value" />
-                            </Form.Item>
-                            <MinusCircleOutlined onClick={() => remove(field.name)}/>
-                            <PlusCircleOutlined />
-                          </Space>
-                        ))}
-                        <Form.Item>
-                          <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                            Add
-                          </Button>
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <Input value={item.name} onChange={({target:{ value }}) => handleChangeStrategy(value, index, 'name')}/>
+                    <Input value={item.value} onChange={({target:{ value }}) => handleChangeStrategy(value, index, 'value')} style={{marginLeft: 10}}/>
+                    <MinusCircleOutlined style={{marginLeft: 10}} onClick={() => iconOperation('reduce', index)}/>
+                    <PlusCircleOutlined style={{marginLeft: 10}} onClick={() => handleAddStrategy(index)}/>
+                  </div>
               </Form.Item>
+            ))}
               <Form.Item
                 label="策略结果"
                 name="result"
@@ -217,6 +250,21 @@ function Semantic(props) {
                   allowClear
                   placeholder="例:((策略1+策略2)+策略3)"
                   />
+              </Form.Item>
+              <Form.Item
+                {...tailLayout}
+              >
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <Button type="primary" onClick={handleAddBrackets}>
+                    逻辑合并
+                  </Button>
+                  <Button type="primary" onClick={() => handleAddLogic('and')}>
+                    逻辑与
+                  </Button>
+                  <Button type="primary" onClick={() => handleAddLogic('or')}>
+                    逻辑或
+                  </Button>
+                </div>
               </Form.Item>
             </Form>
           </Modal>
