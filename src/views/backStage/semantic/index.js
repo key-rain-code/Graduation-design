@@ -1,6 +1,8 @@
-import { useState } from 'react'
-import { Input, Button, Table, Select, Modal, Form, Space } from 'antd';
+import { useState, useEffect } from 'react'
+import { Input, Button, Table, Select, Modal, Form, Space, message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { renderTime } from '../../until'
+import { _getAllStrategyModel, _getDeleteStrategyModel, _getEditStrategyModel, _addStrategyModel } from '../../../http'
 
 import './index.scss'
 
@@ -23,17 +25,80 @@ function Semantic(props) {
   const [visible, setVisible] = useState(false)
   const [modalTitle, setModalTitle] = useState(0)
   const [strategy, setStrategy] = useState([])
+  const [dataSource, setDataSource] = useState([])
+  const [page, setPage] = useState(1)
+  const [searchValue, setSearchValue] = useState('')
+  const [type, setType] = useState(undefined)
+  const [editId, setEditId] = useState()
   const [form] = Form.useForm()
 
-  const handleDelete = (record) => {
-    const { id } = record
+  const apiGetAllStrategyModel = async() => {
+    const res = await _getAllStrategyModel({page, type, name: searchValue})
+    const { status, data } = res
+    if(!status === 200) return
+    setDataSource(data)
+  }
+
+  const apiGetDeleteStrategyModel = async(id) => {
+    const res = await _getDeleteStrategyModel({id})
+    const { status } = res
+    if(!status === 200) return
+    message.success('删除成功！')
+    apiGetAllStrategyModel()
+  }
+
+  useEffect(() => {
+    apiGetAllStrategyModel()
+  }, [page, searchValue, type])
+
+  const handleEdit = (e, record) => {
+    const { setFieldsValue } = form
+    e.preventDefault()
+    setVisible(true)
+    setModalTitle(1)
+    setFieldsValue(record)
+    setStrategy(JSON.parse(record?.strategy_details))
+    setEditId(record?.id)
+  }
+
+  const apiGetEditStrategyModel = async() => {
+    const { getFieldValue } = form
+    const params = {
+      id: editId,
+      name: getFieldValue('name'),
+      describe: getFieldValue('describe'),
+      type: getFieldValue('type'),
+      strategy_result: getFieldValue('strategy_result'),
+      strategy_details: JSON.stringify(strategy)
+    }
+    const res = await _getEditStrategyModel(params)
+    const { status } = res
+    if(!status === 200) return
+    message.success('更新成功！')
+    apiGetAllStrategyModel()
+  }
+
+  const apiAddStrategyModel = async() => {
+    const { getFieldValue } = form
+    const params = {
+      name: getFieldValue('name'),
+      describe: getFieldValue('describe'),
+      type: getFieldValue('type'),
+      strategy_result: getFieldValue('strategy_result'),
+      strategy_details: JSON.stringify(strategy)
+    }
+    const res = await _addStrategyModel(params)
+    const { status } = res
+    if(!status === 200) return
+    message.success('新增成功！')
+    apiGetAllStrategyModel()
   }
 
   const columns = [
     {
       title: '策略名称',
-      dataIndex: 'strategyName',
-      key: 'strategyName'
+      dataIndex: 'name',
+      key: 'name'
     },
     {
       title: '描述',
@@ -42,13 +107,15 @@ function Semantic(props) {
     },
     {
       title: '策略类型',
-      dataIndex: 'strategyType',
-      key: 'strategyType'
+      dataIndex: 'type',
+      key: 'type',
+      render: (text) => text ? '自定义策略':'场景策略'
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
+      render: (text) => renderTime(text)
     },
     {
       title: '操作',
@@ -58,11 +125,7 @@ function Semantic(props) {
         <Space>
           <a 
           href="#/"
-          onClick={(e) =>{
-            e.preventDefault()
-            setVisible(true)
-            setModalTitle(1)
-           }}
+          onClick={(e) => handleEdit(e, record)}
           >
             编辑
           </a>
@@ -70,24 +133,13 @@ function Semantic(props) {
           href="#/"
           onClick={(e) =>{
             e.preventDefault()
-            handleDelete(record)
+            apiGetDeleteStrategyModel(record?.id)
            }}
           >
             删除
           </a>
         </Space>
       )
-    }
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      content: '萍水街发生拥堵福建省开发技术开发和健康烦恼是会计法',
-      unit: 'G11',
-      issueTime: '2021-02-02 13:43',
-      strategyType: '场景策略',
-      setType: '手动'
     }
   ];
 
@@ -108,31 +160,42 @@ function Semantic(props) {
   }
 
   const handleCancel = () => {
+    const { resetFields } = form
     setVisible(false)
+    resetFields()
     setStrategy([])
   }
 
   const handleAddBrackets = () => {
     const { setFieldsValue, getFieldValue } = form
-    const newResult = '(' + getFieldValue('result') + ')'
-    setFieldsValue({'result' : newResult})
+    const newResult = '(' + getFieldValue('strategy_result') + ')'
+    setFieldsValue({'strategy_result' : newResult})
   }
 
   const handleAddStrategy = (index) => {
     const { getFieldValue, setFieldsValue } = form
     const strategy = '策略'+ (index+1)
-    const nowResult = getFieldValue('result')
+    const nowResult = getFieldValue('strategy_result')
     if(!nowResult) {
-      setFieldsValue({'result' : strategy})
+      setFieldsValue({'strategy_result' : strategy})
     } else {
-      setFieldsValue({'result' : nowResult + strategy })
+      setFieldsValue({'strategy_result' : nowResult + strategy })
     }
   }
 
   const handleAddLogic = (operat) => {
     const { getFieldValue, setFieldsValue } = form
-    const nowResult = getFieldValue('result')
-    setFieldsValue({'result' : `${nowResult} ${operat} ` })
+    const nowResult = getFieldValue('strategy_result')
+    setFieldsValue({'strategy_result' : `${nowResult} ${operat} ` })
+  }
+
+  const handleSubmit = () => {
+    if(modalTitle){
+      apiGetEditStrategyModel()
+    } else {
+      apiAddStrategyModel()
+    }
+    handleCancel()
   }
 
   return (
@@ -145,6 +208,7 @@ function Semantic(props) {
             allowClear
             enterButton
             bordered={false}
+            onSearch={(value) => setSearchValue(value)}
             style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
           />
           <label>
@@ -153,10 +217,12 @@ function Semantic(props) {
             </span>
             <Select 
               bordered={false}
+              onChange={value => setType(value)}
+              allowClear
               style={{ width: 220, boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
               >
-              <Option value="scene_strategy">场景策略</Option>
-              <Option value="custom_strategy">自定义策略</Option>
+              <Option value={0}>场景策略</Option>
+              <Option value={1}>自定义策略</Option>
             </Select>
           </label>
         </div>
@@ -172,8 +238,9 @@ function Semantic(props) {
       </div>
       <Table 
         columns={columns} 
-        dataSource={data} 
+        dataSource={dataSource} 
         className="auto-table"
+        onChange={(page) => setPage(page)}
         style={{ boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2 }}
         />
         {visible &&
@@ -186,7 +253,7 @@ function Semantic(props) {
               <Button key="back" onClick={handleCancel}>
                 取消
               </Button>,
-              <Button key="submit" type="primary" onClick={() => console.log(form.getFieldsValue(),'123')}>
+              <Button key="submit" type="primary" onClick={handleSubmit}>
                 确定
               </Button>,
             ]}
@@ -205,7 +272,7 @@ function Semantic(props) {
             </Form.Item>
             <Form.Item
               label="描述"
-              name="description"
+              name="describe"
             >
               <TextArea rows={3} />
             </Form.Item>
@@ -215,8 +282,8 @@ function Semantic(props) {
               rules={[{ required: true, message: '请选择策略类型！' }]}
             >
               <Select>
-                <Option value="scene_strategy">场景策略</Option>
-                <Option value="custom_strategy">自定义策略</Option>
+                <Option value={0}>场景策略</Option>
+                <Option value={1}>自定义策略</Option>
               </Select>
             </Form.Item>
             <Form.Item
@@ -242,7 +309,7 @@ function Semantic(props) {
             ))}
               <Form.Item
                 label="策略结果"
-                name="result"
+                name="strategy_result"
                 rules={[{ required: true, message: '请输入策略结果！' }]}
               >
                 <TextArea 

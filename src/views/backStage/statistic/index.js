@@ -1,25 +1,57 @@
+import { useEffect, useState } from 'react'
 import { Card, Col, Row } from 'antd';
 
 import LineEcharts from './component/lineEcharts'
+import { _getInfoCount, _getScenStrategy, _getCustomStrategy } from '../../../http'
 
 import './index.scss'
 
 function Statistic(props) {
+  const [accessInfo, setAccessInfo] = useState(0)
+  const [scenStrategy, setScenStrategy] = useState(0)
+  const [customStrategy, setCustomStrategy] = useState(0)
+
+  useEffect(() => {
+    apiGetInfoCount()
+    apiGetScenStrategy()
+    apiGetCustomStrategy()
+  }, [])
+
+  const apiGetInfoCount = async() => {
+    const res = await _getInfoCount()
+    const { status, data } = res
+    if(!status === 200) return
+    setAccessInfo(data?.sum)
+  }
+
+  const apiGetScenStrategy = async() => {
+    const res = await _getScenStrategy()
+    const { status, data } = res
+    if(!status === 200) return
+    setScenStrategy(data?.sum)
+  }
+
+  const apiGetCustomStrategy = async() => {
+    const res = await _getCustomStrategy()
+    const { status, data } = res
+    if(!status === 200) return
+    setCustomStrategy(data?.sum)
+  }
 
   const cardArray = [{
     id: 'accessInfo',
     title: '接入信息',
-    data: 1000,
+    data: accessInfo,
     imgUrl: 'statistic-card-first.png'
   }, {
     id: 'scenStrategy',
     title: '场景策略',
-    data: 4,
+    data: scenStrategy,
     imgUrl: 'statistic-card-second.png'
   }, {
     id: 'customStrategy',
     title: '自定义策略',
-    data: 10,
+    data: customStrategy,
     imgUrl: 'statistic-card-third.png'
   }]
 

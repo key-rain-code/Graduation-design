@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Form, Input, Button, Select, Checkbox } from 'antd';
+import { Form, Input, Button, Select, Checkbox, message } from 'antd';
 import { hashHistory } from "react-router";
+import { _registered } from '../../http'
 
 import './index.scss'
 
@@ -28,13 +29,15 @@ function Register() {
   const [isCarOwner, setIsCarOwner] = useState(false)
 
   const onFinish = (values) => {
-    console.log('Success:', values);
+    apiRegistered(values)
   };
 
-  const onFinishFailed = (errorInfo) => {
-    hashHistory.push('/backStage')
-    console.log('Failed:', errorInfo);
-  };
+  const apiRegistered = async(params) => {
+    const res = await _registered(params)
+    const { data } = res
+    if(!data.success) return message.warn('注册失败！')
+    hashHistory.push('/login')
+  }
 
   return (
     <div className='register-content'>
@@ -50,7 +53,6 @@ function Register() {
           form={form}
           requiredMark={false}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label="用户名"
@@ -125,9 +127,7 @@ function Register() {
             ]}
           >
             <Select onChange={value => { setIsCarOwner(value === '2'? true : false) }}>
-              <Option value="0">管理员</Option>
               <Option value="1">分发管理</Option>
-              <Option value="2">车主</Option>
             </Select>
           </Form.Item>
 

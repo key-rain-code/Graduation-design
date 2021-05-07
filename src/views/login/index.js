@@ -1,5 +1,6 @@
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, message } from 'antd';
 import { hashHistory } from "react-router";
+import { _login } from '../../http'
 
 import './index.scss'
 
@@ -23,18 +24,20 @@ const { Option } = Select
 
 function Login() {
   const onFinish = (values) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    hashHistory.push('/backStage')
-    console.log('Failed:', errorInfo);
+    checkLogin(values)
   };
 
   const handleClickRegister = (e) => {
     e.preventDefault()
     hashHistory.push('/register')
   }
+
+  const checkLogin = async(params) => {
+    const res = await _login(params)
+    const { data } = res
+    if(data?.results?.length === 0) return message.warn('用户名或密码不正确！')
+    hashHistory.push('/backStage')
+  } 
 
   return (
     <div className='login-content'>
@@ -46,7 +49,6 @@ function Login() {
           name="basic"
           requiredMark={false}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label="用户名"
@@ -82,7 +84,6 @@ function Login() {
             <Select>
               <Option value="0">管理员</Option>
               <Option value="1">分发管理</Option>
-              <Option value="2">车主</Option>
             </Select>
           </Form.Item>
 

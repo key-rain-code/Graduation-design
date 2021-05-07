@@ -1,8 +1,39 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as echarts from 'echarts';
+import { _getCountWeek } from '../../../../http'
 
 function LineEcharts(props) {
   const echartsDom = useRef(null)
+  const [echartData, setEchartData] = useState({
+    'accessInfo': [],
+    'scenStrategy': [],
+    'customStrategy': [],
+    'success': false
+  })
+
+  const getBeforeDate = (day) => {
+    const data = new Date(new Date().getTime() - day * 24 * 3600 * 1000);
+    return formatTime(data.getMonth() + 1) + '-' + formatTime(data.getDate())
+  }
+
+  const formatTime = (value) => {
+      if(value.toString()?.length<2) {
+          return '0' + value
+      } else {
+          return value
+      }
+  }
+
+  const apiGetCountWeek = async() => {
+    const res = await _getCountWeek()
+    const { status, data } = res
+    if(!status === 200) return
+    setEchartData({...data, success: true})
+  }
+
+  useEffect(() => {
+    apiGetCountWeek()
+  }, [])
 
   useEffect(() => {
     const { current: node } = echartsDom
@@ -40,7 +71,7 @@ function LineEcharts(props) {
           {
               type: 'category',
               boundaryGap: false,
-              data: ['02-19', '02-20', '02-21', '02-22', '02-23', '02-24', '02-25']
+              data: [getBeforeDate(6), getBeforeDate(5), getBeforeDate(4), getBeforeDate(3), getBeforeDate(2), getBeforeDate(1), getBeforeDate(0)]
           }
       ],
       yAxis: [
@@ -57,7 +88,7 @@ function LineEcharts(props) {
               emphasis: {
                   focus: 'series'
               },
-              data: [120, 132, 101, 134, 90, 230, 210]
+              data: echartData.accessInfo
           },
           {
               name: '场景策略',
@@ -67,7 +98,7 @@ function LineEcharts(props) {
               emphasis: {
                   focus: 'series'
               },
-              data: [220, 182, 191, 234, 290, 330, 310]
+              data: echartData.scenStrategy
           },
           {
               name: '自定义策略',
@@ -77,13 +108,13 @@ function LineEcharts(props) {
               emphasis: {
                   focus: 'series'
               },
-              data: [150, 232, 201, 154, 190, 330, 410]
+              data: echartData.customStrategy
           }
       ]
   };
 
     option && myChart.setOption(option);
-  }, [echartsDom])
+  }, [echartsDom, echartData.success])
 
   return (
     <div 

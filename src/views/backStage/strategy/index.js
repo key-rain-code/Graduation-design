@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Input, Tag, Button, Modal, Form } from 'antd'
+import { useState, useEffect } from 'react';
+import { Input, Tag, Button, Modal, Form, message } from 'antd'
+import { _getAllAttrList, _searchAttr, _deleteAttr, _addAttr } from '../../../http'
 import './index.scss'
 
-const { Search } = Input;
+const { Search, TextArea } = Input;
 
 const layout = {
   labelCol: { span: 6 },
@@ -11,6 +12,8 @@ const layout = {
 
 function Strategy(props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [attrArr, setAttrArr] = useState([])
+  const [edit, setEdit] = useState(false)
   const [form] = Form.useForm()
 
   const tagColor = [
@@ -27,13 +30,60 @@ function Strategy(props) {
     'purple'
   ]
 
-  const tagData = [{
-    id: '1',
-    text: 'magenta'
-  }, {
-    id: '2',
-    text: 'red'
-  }]
+  const apiGetAllAttrList = async() => {
+    const res = await _getAllAttrList()
+    const { status, data } = res
+    if(!status === 200) return
+    setAttrArr(data)
+  }
+
+  const handleCheckDetail = (index) => {
+    const { setFieldsValue } = form
+    setIsModalVisible(true)
+    setFieldsValue(attrArr[index])
+    setEdit(false)
+  }
+
+  const handleCancel = () => {
+    const { resetFields } = form
+    resetFields()
+    setIsModalVisible(false)
+  }
+
+  const apiSearchAttr = async(name) => {
+    const res = await _searchAttr({name})
+    const { status, data } = res
+    if(!status === 200) return
+    setAttrArr(data)
+  }
+
+  const apiDeleteAttr = async(id) => {
+    const res = await _deleteAttr({id})
+    const { status } = res
+    if(!status === 200) return
+    message.success('删除成功！')
+    apiGetAllAttrList()
+  }
+
+  const apiAddAttr = async(params) => {
+    const res = await _addAttr(params)
+    const { status } = res
+    if(!status === 200) return
+    message.success('增加成功！')
+    apiGetAllAttrList()
+  }
+
+  const handleSubmit = () => {
+    const { getFieldsValue } = form
+    if(edit) {
+      apiAddAttr(getFieldsValue())
+    }
+    handleCancel()
+  }
+
+  useEffect(() => {
+    apiGetAllAttrList()
+  },[])
 
   return (
     <div className="backStage-strategy-main">
@@ -44,14 +94,22 @@ function Strategy(props) {
           allowClear
           enterButton
           bordered={false}
+          onSearch={(value) => value?apiSearchAttr(value):apiGetAllAttrList()}
           style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}
         />
-        <Button type="primary" onClick={() => setIsModalVisible(true)}>增加</Button>
+        <Button type="primary" onClick={() => {setIsModalVisible(true);setEdit(true)}}>增加</Button>
       </div>
       <div className="tags-div" style={{boxShadow:'0px 2px 8px 0px rgb(6 14 26 / 8%)', backgroundColor: '#FFFFFF', borderRadius: 2}}>
-        {tagData?.map(({id, text}, index) => (
-          <Tag color={tagColor[index % 11]} closable key={id}>
-            {text}
+        {attrArr?.map(({id, name}, index) => (
+          <Tag 
+            color={tagColor[index % 11]} 
+            closable 
+            key={id} 
+            style={{cursor: 'pointer'}}
+            onClose={() => apiDeleteAttr(id)}
+            onClick={() => handleCheckDetail(index)}
+          >
+            {name}
           </Tag>
         ))}
       </div>
@@ -71,18 +129,29 @@ function Strategy(props) {
           </h4>
         </div>
       </div>
-      <Modal title="添加" visible={isModalVisible} onOk={() => setIsModalVisible(false)} onCancel={() => setIsModalVisible(false)}>
+      <Modal 
+        title={edit? '新增':'详情'} 
+        visible={isModalVisible} 
+        onOk={() => handleSubmit()} 
+        onCancel={() => handleCancel()}
+      >
         <Form
         {...layout}
         name="basic"
         form={form}
       >
           <Form.Item
-            label="属性"
-            name="semanticsName"
+            label="属性名"
+            name="name"
             rules={[{ required: true, message: '请输入内容!' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="描述"
+            name="describe"
+          >
+            <TextArea rows={3} />
           </Form.Item>
         </Form>
       </Modal>

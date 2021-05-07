@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, Menu, Dropdown } from 'antd';
 import { 
   AliwangwangFilled, DownOutlined, BarChartOutlined, 
@@ -29,6 +29,12 @@ function Container(props) {
     setCollapsed(!collapsed)
   };
 
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem('menuSelect', ['1'])
+    }
+  }, [])
+
   return (
     <Layout className="backStage-content">
         <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -38,12 +44,17 @@ function Container(props) {
               onClick: toggle
             })}
           </div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<BarChartOutlined />} onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
-            <Menu.Item key="2" icon={<CopyOutlined />} onClick={() => handleMenuClick('infoBase')}>信息总库</Menu.Item>
-            <Menu.Item key="3" icon={<FormOutlined />} onClick={() => handleMenuClick('semantic')}>策略元模型</Menu.Item>
-            <Menu.Item key="4" icon={<MediumOutlined />} onClick={() => handleMenuClick('strategy')}>属性集合</Menu.Item>
-            <Menu.Item key="5" icon={<SafetyOutlined />} onClick={() => handleMenuClick('verification')}>场景模拟</Menu.Item>
+          <Menu
+            theme="dark"
+            mode="inline" 
+            selectedKeys={sessionStorage.getItem('menuSelect')} 
+            onSelect={({item, key, keyPath, selectedKeys, domEvent }) => sessionStorage.setItem('menuSelect', selectedKeys)}
+            >
+              <Menu.Item key="1" icon={<BarChartOutlined />} onClick={() => handleMenuClick('statistic')}>数据概览</Menu.Item>
+              <Menu.Item key="2" icon={<CopyOutlined />} onClick={() => handleMenuClick('infoBase')}>信息总库</Menu.Item>
+              <Menu.Item key="3" icon={<FormOutlined />} onClick={() => handleMenuClick('semantic')}>策略元模型</Menu.Item>
+              <Menu.Item key="4" icon={<MediumOutlined />} onClick={() => handleMenuClick('strategy')}>属性集合</Menu.Item>
+              <Menu.Item key="5" icon={<SafetyOutlined />} onClick={() => handleMenuClick('verification')}>场景模拟</Menu.Item>
           </Menu>
         </Sider>
       
